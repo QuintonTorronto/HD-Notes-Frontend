@@ -38,7 +38,6 @@ const otpSchema = z.object({
 type OtpForm = z.infer<typeof otpSchema>;
 
 export default function Login() {
-  const [method, setMethod] = useState<"otp">("otp");
   const [showOtpField, setShowOtpField] = useState(false);
   const [emailValue, setEmailValue] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -169,86 +168,81 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="h-screen bg-white">
       <div className="flex justify-center md:justify-start px-4 pt-6 md:px-10 md:pt-4">
         <img src="/logo-HD.svg" alt="Logo" className="h-10 w-auto" />
       </div>
-      <div className="flex flex-col bg-gray-50 md:flex-row mt-5 overflow-hidden">
+      <div className="flex flex-col bg-white md:flex-row mt-5 overflow-hidden">
         {/* Login Form (*/}
-        <div className="w-full md:w-1/2 overflow-y-auto px-4 py-10 bg-gray-50 flex justify-center items-center">
+        <div className="w-full md:w-1/2 overflow-y-auto px-4 py-10 bg-white flex justify-center items-center">
           <div className="w-full max-w-md p-6 sm:p-8">
             <h1 className="text-4xl font-semibold mb-2 text-gray-800">
               Sign In
             </h1>
             <h2 className="text-sm font-normal mb-6 text-gray-600">
-              Please login to continue to your account.
+              Please Signin to continue to your account.
             </h2>
 
-            {method === "otp" && (
-              <form
-                onSubmit={handleOtpSubmit(onOtpSubmit)}
-                className="space-y-4"
-              >
-                <Input
-                  label="Email"
-                  type="email"
-                  {...registerOtp("email")}
-                  error={otpErrors.email?.message}
-                  onChange={(e) => {
-                    setOtpValue("email", e.target.value);
-                    setEmailValue(e.target.value);
-                  }}
-                />
-                {showOtpField && (
-                  <>
-                    <div className="relative">
-                      <Input
-                        label="OTP"
-                        type={showOtpValue ? "text" : "password"}
-                        {...registerOtp("otp")}
-                        error={otpErrors.otp?.message}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowOtpValue((prev) => !prev)}
-                        className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-                        tabIndex={-1}
-                      >
-                        {showOtpValue ? (
-                          <FiEyeOff size={20} />
-                        ) : (
-                          <FiEye size={20} />
-                        )}
-                      </button>
-                    </div>
+            <form onSubmit={handleOtpSubmit(onOtpSubmit)} className="space-y-4">
+              <Input
+                label="Email"
+                type="email"
+                {...registerOtp("email")}
+                error={otpErrors.email?.message}
+                onChange={(e) => {
+                  setOtpValue("email", e.target.value);
+                  setEmailValue(e.target.value);
+                }}
+              />
+              {showOtpField && (
+                <>
+                  <div className="relative">
+                    <Input
+                      label="OTP"
+                      type={showOtpValue ? "text" : "password"}
+                      {...registerOtp("otp")}
+                      error={otpErrors.otp?.message}
+                    />
                     <button
                       type="button"
-                      onClick={onResendOtp}
-                      className={`text-sm ${
-                        resendCooldown > 0
-                          ? "text-gray-400"
-                          : "text-blue-500 hover:underline"
-                      }`}
-                      disabled={resendCooldown > 0}
+                      onClick={() => setShowOtpValue((prev) => !prev)}
+                      className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                      tabIndex={-1}
                     >
-                      {resendCooldown > 0
-                        ? `Resend in ${resendCooldown}s`
-                        : "Resend OTP"}
+                      {showOtpValue ? (
+                        <FiEyeOff size={20} />
+                      ) : (
+                        <FiEye size={20} />
+                      )}
                     </button>
-                  </>
-                )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onResendOtp}
+                    className={`text-sm ${
+                      resendCooldown > 0
+                        ? "text-gray-400"
+                        : "text-blue-500 hover:underline"
+                    }`}
+                    disabled={resendCooldown > 0}
+                  >
+                    {resendCooldown > 0
+                      ? `Resend in ${resendCooldown}s`
+                      : "Resend OTP"}
+                  </button>
+                </>
+              )}
 
-                {!showOtpField ? (
-                  <Button type="button" onClick={onOtpRequest} full>
-                    Get OTP
-                  </Button>
-                ) : (
-                  <Button type="submit" full>
-                    Sign In
-                  </Button>
-                )}
-              </form>
-            )}
+              {!showOtpField ? (
+                <Button type="button" onClick={onOtpRequest} full>
+                  Get OTP
+                </Button>
+              ) : (
+                <Button type="submit" full>
+                  Sign In
+                </Button>
+              )}
+            </form>
 
             {/* Google Sign In Button */}
             <div className="my-4 px-4 py-2">

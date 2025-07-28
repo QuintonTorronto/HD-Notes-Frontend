@@ -105,14 +105,14 @@ export default function Signup() {
   };
 
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="h-screen bg-white">
       <div className="flex justify-center md:justify-start px-4 pt-6 md:px-10 md:pt-4">
         <img src="/logo-HD.svg" alt="Logo" className="h-10 w-auto" />
       </div>
 
       <div className="flex flex-col md:flex-row h-screen overflow-hidden">
         {/* Signup Form */}
-        <div className="w-full md:w-1/2 overflow-y-auto p-6 flex justify-center items-center bg-gray-50">
+        <div className="w-full md:w-1/2 overflow-y-auto p-6 flex justify-center items-center bg-white">
           <div className="w-full max-w-md md:max-w-sm p-6 md:p-8">
             <h1 className="text-4xl font-semibold mb-2 text-gray-800">
               Sign up
