@@ -35,20 +35,14 @@ const otpSchema = z.object({
   otp: z.string().length(6, "OTP must be 6 digits"),
 });
 
-const passwordSchema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password too short"),
-});
-
 type OtpForm = z.infer<typeof otpSchema>;
-type PasswordForm = z.infer<typeof passwordSchema>;
 
 export default function Login() {
-  const [method, setMethod] = useState<"otp" | "password">("otp");
+  const [method, setMethod] = useState<"otp">("otp");
   const [showOtpField, setShowOtpField] = useState(false);
   const [emailValue, setEmailValue] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showOtpValue, setShowOtpValue] = useState(false);
 
   const navigate = useNavigate();
   const setAuthenticated = useAuth((s) => s.setAuthenticated);
@@ -64,16 +58,6 @@ export default function Login() {
     formState: { errors: otpErrors },
   } = useForm<OtpForm>({
     resolver: zodResolver(otpSchema),
-    defaultValues: { email: emailValue },
-  });
-
-  const {
-    register: registerPwd,
-    handleSubmit: handlePwdSubmit,
-    setValue: setPwdValue,
-    formState: { errors: pwdErrors },
-  } = useForm<PasswordForm>({
-    resolver: zodResolver(passwordSchema),
     defaultValues: { email: emailValue },
   });
 
@@ -97,7 +81,6 @@ export default function Login() {
       setResendCooldown(30);
       setEmailValue(email);
       setOtpValue("email", email);
-      setPwdValue("email", email);
       toast.success("OTP sent to email");
     } catch (err: unknown) {
       const message =
@@ -136,37 +119,6 @@ export default function Login() {
         (err as any)?.response?.data?.message || "OTP login failed";
       toast.error(message);
     }
-  };
-
-  const onPwdSubmit = async (data: PasswordForm) => {
-    try {
-      const res = await api.post("/auth/login", data, {
-        withCredentials: true,
-      });
-
-      const { accessToken } = res.data;
-      localStorage.setItem("accessToken", accessToken);
-      setAuthenticated(true);
-      navigate("/dashboard");
-      toast.success("Login successful!");
-    } catch (err: unknown) {
-      const message = (err as any)?.response?.data?.message || "Login failed";
-      toast.error(message);
-    }
-  };
-
-  const switchToPassword = () => {
-    const currentEmail = watchOtp("email") || emailValue;
-    setEmailValue(currentEmail);
-    setPwdValue("email", currentEmail);
-    setMethod("password");
-    setShowOtpField(false);
-  };
-
-  const switchToOtp = () => {
-    setOtpValue("email", emailValue);
-    setMethod("otp");
-    setShowOtpField(false);
   };
 
   const handleGoogleCredential = async (credential: string) => {
@@ -224,8 +176,8 @@ export default function Login() {
       <div className="flex flex-col bg-gray-50 md:flex-row mt-5 overflow-hidden">
         {/* Login Form (*/}
         <div className="w-full md:w-1/2 overflow-y-auto px-4 py-10 bg-gray-50 flex justify-center items-center">
-          <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 sm:p-8">
-            <h1 className="text-2xl font-semibold mb-2 text-gray-800">
+          <div className="w-full max-w-md p-6 sm:p-8">
+            <h1 className="text-4xl font-semibold mb-2 text-gray-800">
               Sign In
             </h1>
             <h2 className="text-sm font-normal mb-6 text-gray-600">
@@ -249,12 +201,26 @@ export default function Login() {
                 />
                 {showOtpField && (
                   <>
-                    <Input
-                      label="OTP"
-                      type="text"
-                      {...registerOtp("otp")}
-                      error={otpErrors.otp?.message}
-                    />
+                    <div className="relative">
+                      <Input
+                        label="OTP"
+                        type={showOtpValue ? "text" : "password"}
+                        {...registerOtp("otp")}
+                        error={otpErrors.otp?.message}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowOtpValue((prev) => !prev)}
+                        className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                        tabIndex={-1}
+                      >
+                        {showOtpValue ? (
+                          <FiEyeOff size={20} />
+                        ) : (
+                          <FiEye size={20} />
+                        )}
+                      </button>
+                    </div>
                     <button
                       type="button"
                       onClick={onResendOtp}
@@ -281,72 +247,6 @@ export default function Login() {
                     Sign In
                   </Button>
                 )}
-
-                <button
-                  type="button"
-                  className="text-gray-500 text-sm hover:underline hover:text-blue-600 mt-2"
-                  onClick={switchToPassword}
-                >
-                  Sign in with Password
-                </button>
-              </form>
-            )}
-
-            {/* Password Login Section */}
-            {method === "password" && (
-              <form
-                onSubmit={handlePwdSubmit(onPwdSubmit)}
-                className="space-y-4"
-              >
-                <Input
-                  label="Email"
-                  type="email"
-                  {...registerPwd("email")}
-                  error={pwdErrors.email?.message}
-                  onChange={(e) => {
-                    setPwdValue("email", e.target.value);
-                    setEmailValue(e.target.value);
-                  }}
-                />
-                <div className="relative">
-                  <Input
-                    label="Password"
-                    type={showPassword ? "text" : "password"}
-                    {...registerPwd("password")}
-                    error={pwdErrors.password?.message}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? (
-                      <FiEyeOff size={20} />
-                    ) : (
-                      <FiEye size={20} />
-                    )}
-                  </button>
-                </div>
-                <Button type="submit" full>
-                  Sign In
-                </Button>
-                <div className="flex justify-between items-center text-sm mt-2 px-1">
-                  <button
-                    type="button"
-                    onClick={switchToOtp}
-                    className="text-gray-500 hover:underline hover:text-blue-600"
-                  >
-                    Use OTP to sign in
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/forgot-password")}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
               </form>
             )}
 

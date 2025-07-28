@@ -68,8 +68,6 @@ export default function Hero() {
           <ul className="list-disc list-inside space-y-1 text-gray-700">
             <li>Google OAuth login</li>
             <li>OTP-based login (OAuth users can also sign in via OTP)</li>
-            <li>Password login</li>
-            <li>Forgot Password (OTP verification + password reset)</li>
             <li>Secure cookies, token refresh & guards</li>
           </ul>
         </div>

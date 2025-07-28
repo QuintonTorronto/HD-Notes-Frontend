@@ -8,8 +8,6 @@ import Login from "./pages/Login";
 import CompleteProfile from "./pages/CompleteProfile";
 import CompleteProfileRoute from "./routes/CompleteProfileRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -69,8 +67,6 @@ export default function App() {
         <Route path="/" element={<Hero />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/complete-profile"
           element={

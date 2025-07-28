@@ -17,7 +17,6 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 const signupSchema = z.object({
   name: z.string().min(2, "Name is too short"),
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Minimum 6 characters"),
   dob: z.date({ required_error: "Date of birth is required" }),
 });
 
@@ -32,7 +31,7 @@ type OtpData = z.infer<typeof otpSchema>;
 
 export default function Signup() {
   const [showOtp, setShowOtp] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showOtpValue, setShowOtpValue] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -114,8 +113,8 @@ export default function Signup() {
       <div className="flex flex-col md:flex-row h-screen overflow-hidden">
         {/* Signup Form */}
         <div className="w-full md:w-1/2 overflow-y-auto p-6 flex justify-center items-center bg-gray-50">
-          <div className="w-full max-w-md md:max-w-sm bg-white rounded-2xl shadow-lg p-6 md:p-8">
-            <h1 className="text-2xl font-semibold mb-2 text-gray-800">
+          <div className="w-full max-w-md md:max-w-sm p-6 md:p-8">
+            <h1 className="text-4xl font-semibold mb-2 text-gray-800">
               Sign up
             </h1>
             <h2 className="text-xs font-normal mb-6 text-gray-600">
@@ -158,40 +157,37 @@ export default function Signup() {
                 error={errors.email?.message}
               />
 
-              <div className="relative">
-                <Input
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
-                  error={errors.password?.message}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-                  tabIndex={-1}
-                >
-                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-                </button>
-              </div>
-
               {/* OTP Section */}
               {showOtp && (
                 <div>
                   <label className="block text-gray-700 font-medium mb-1">
                     OTP Code
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-400 focus:outline-none focus:ring-2"
-                    {...registerOtp("otp")}
-                  />
-                  {otpErrors.otp && (
-                    <p className="text-red-500 text-sm">
-                      {otpErrors.otp.message}
-                    </p>
-                  )}
+                  <div className="relative">
+                    <input
+                      type={showOtpValue ? "text" : "password"}
+                      placeholder="Enter OTP"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-400 focus:outline-none focus:ring-2"
+                      {...registerOtp("otp")}
+                    />
+                    {otpErrors.otp && (
+                      <p className="text-red-500 text-sm">
+                        {otpErrors.otp.message}
+                      </p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowOtpValue((prev) => !prev)}
+                      className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+                      tabIndex={-1}
+                    >
+                      {showOtpValue ? (
+                        <FiEyeOff size={20} />
+                      ) : (
+                        <FiEye size={20} />
+                      )}
+                    </button>
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">
                     OTP sent to {getValues("email")}
                   </p>
