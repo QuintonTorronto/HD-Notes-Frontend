@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white text-gray-800 px-4 py-12 flex flex-col items-center">
       <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-4 tracking-tight">
-        Welcome, <span className="text-blue-600">Recruitment</span> Team
+        Welcome, <span className="text-blue-600">Highway Delite</span> Team
       </h1>
       <p className="text-lg text-center text-gray-600 max-w-2xl mb-10">
         Explore a production-ready, full-stack application built with secure
@@ -35,7 +35,7 @@ export default function Hero() {
           <h3 className="text-xl font-semibold mb-3">GitHub Repository</h3>
           <div className="flex flex-col space-y-2">
             <a
-              href="https://github.com/QuintonTorronto/Auth-Frontend"
+              href="https://github.com/QuintonTorronto/HD-Notes-Frontend"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline flex items-center gap-2"
@@ -43,7 +43,7 @@ export default function Hero() {
               <FaGithub /> Frontend Repository
             </a>
             <a
-              href="https://github.com/QuintonTorronto/Auth-Backend"
+              href="https://github.com/QuintonTorronto/HD-Notes-Backend"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline flex items-center gap-2"
